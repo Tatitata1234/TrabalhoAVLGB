@@ -2,7 +2,6 @@ package org.example;
 
 import org.example.entity.Arvore;
 import org.example.entity.No;
-import org.example.util.MenuUtils;
 
 import java.util.Scanner;
 
@@ -20,30 +19,33 @@ public class Menu {
             Digite a Opção:
                     
             """;
-    public static final String TITULO = ("""
-              
-            --r-----------------------------------------------------------------------------------------------------
-              
-              /$$$$$$                                                           /$$$$$$  /$$    /$$ /$$     \s
-             /$$__  $$                                                         /$$__  $$| $$   | $$| $$     \s
-            | $$  \\ $$  /$$$$$$  /$$    /$$ /$$$$$$   /$$$$$$   /$$$$$$       | $$  \\ $$| $$   | $$| $$     \s
-            | $$$$$$$$ /$$__  $$|  $$  /$$//$$__  $$ /$$__  $$ /$$__  $$      | $$$$$$$$|  $$ / $$/| $$     \s
-            | $$__  $$| $$  \\__/ \\  $$/$$/| $$  \\ $$| $$  \\__/| $$$$$$$$      | $$__  $$ \\  $$ $$/ | $$     \s
-            | $$  | $$| $$        \\  $$$/ | $$  | $$| $$      | $$_____/      | $$  | $$  \\  $$$/  | $$     \s
-            | $$  | $$| $$         \\  $/  |  $$$$$$/| $$      |  $$$$$$$      | $$  | $$   \\  $/   | $$$$$$$$
-            |__/  |__/|__/          \\_/    \\______/ |__/       \\_______/      |__/  |__/    \\_/    |________/
-                                                                                                            \s
-                                                                                                            \s
-                                                                                                            \s
-                            
-            Integrantes: Thais Landfeldt, Victório Faraco, João Trajano
-            -------------------------------------------------------------------------------------------------------
-            """);
 
     private Menu() {}
 
     public static void main(String[] args) {
         Menu.run();
+    }
+
+    public static String titulo() {
+        return ("""
+                  
+                --r-----------------------------------------------------------------------------------------------------
+                  
+                  /$$$$$$                                                           /$$$$$$  /$$    /$$ /$$     \s
+                 /$$__  $$                                                         /$$__  $$| $$   | $$| $$     \s
+                | $$  \\ $$  /$$$$$$  /$$    /$$ /$$$$$$   /$$$$$$   /$$$$$$       | $$  \\ $$| $$   | $$| $$     \s
+                | $$$$$$$$ /$$__  $$|  $$  /$$//$$__  $$ /$$__  $$ /$$__  $$      | $$$$$$$$|  $$ / $$/| $$     \s
+                | $$__  $$| $$  \\__/ \\  $$/$$/| $$  \\ $$| $$  \\__/| $$$$$$$$      | $$__  $$ \\  $$ $$/ | $$     \s
+                | $$  | $$| $$        \\  $$$/ | $$  | $$| $$      | $$_____/      | $$  | $$  \\  $$$/  | $$     \s
+                | $$  | $$| $$         \\  $/  |  $$$$$$/| $$      |  $$$$$$$      | $$  | $$   \\  $/   | $$$$$$$$
+                |__/  |__/|__/          \\_/    \\______/ |__/       \\_______/      |__/  |__/    \\_/    |________/
+                                                                                                                \s
+                                                                                                                \s
+                                                                                                                \s
+                                
+                Integrantes: Thais Landfeldt, Victório Faraco, João Trajano
+                -------------------------------------------------------------------------------------------------------
+                """);
     }
 
     public static void arvoreString(Arvore a) {
@@ -75,11 +77,132 @@ public class Menu {
         return arvere;
     }
 
+    private static Arvore criaArvore(Arvore arvore) {
+        Scanner scan = new Scanner(System.in);
+        int escolha;
+
+        if (arvore.isNotEmpty()) {
+            System.out.println("Arvore ja criada...");
+            System.out.println("Deseja Criar outra árvore ?\n1 - Sim\nQualquer outro número - Não");
+            escolha = scan.nextInt();
+            if (escolha == 1) {
+                arvore.clear();
+                System.out.println("Criando árvore, digite o valor a ser inserido:\n");
+                arvore.inserirEBalancearAVL(scan.nextInt());
+            }
+        } else {
+            System.out.println("Criando árvore...");
+            System.out.println("Digite o número que deseja inserir");
+            arvore.inserirEBalancearAVL(scan.nextInt());
+        }
+        return arvore;
+    }
+
+    private static Arvore insere(Arvore arvore) {
+        Scanner scan = new Scanner(System.in);
+        int escolha;
+        if (arvore.isNotEmpty()) {
+            System.out.println("Digite o número que deseja inserir");
+            escolha = scan.nextInt();
+            while (arvore.procura(escolha) != null) {
+                System.out.println("Esse nó ja está na árvore, digite outro número:\n");
+                escolha = scan.nextInt();
+            }
+
+            arvore.inserirEBalancearAVL(escolha);
+        } else {
+            System.out.println("Árvore ainda não criada...");
+        }
+        return arvore;
+    }
+
+    private static void procura(Arvore arvore) {
+
+        Scanner scan = new Scanner(System.in);
+        int escolha;
+
+        if (arvore.isNotEmpty()) {
+            System.out.println("Digite o número que deseja procurar");
+            escolha = scan.nextInt();
+
+            while (arvore.procura(escolha) == null) {
+
+                System.out.println("Esse valor não existe na árvore, digite outro número:\n");
+                escolha = scan.nextInt();
+
+            }
+            System.out.println(arvore.procura(escolha).toString());
+
+        } else {
+
+            System.out.println("Árvore ainda não criada");
+
+        }
+    }
+
+    private static Arvore exclui(Arvore arvore) {
+        int escolha;
+        Scanner scan = new Scanner(System.in);
+        if (arvore.isNotEmpty()) {
+            System.out.println("Digite o número que deseja excluir");
+            escolha = scan.nextInt();
+            while (arvore.procura(escolha) == null) {
+                System.out.println("Esse nó não existe na árvore, digite outro número:\n");
+                escolha = scan.nextInt();
+            }
+            arvore.excluir(escolha);
+        } else {
+            System.out.println("Árvore ainda não criada");
+        }
+        return arvore;
+    }
+
+    private static void caminha(Arvore arvore) {
+        Scanner scan = new Scanner(System.in);
+        int escolha;
+        if (arvore.isNotEmpty()) {
+            System.out.println("""
+                    Como deseja visualizar o caminho da arvore?
+                    1 - Pré-Ordem
+                    2 - Em  Ordem
+                    3 - Pós-Ordem
+                    Digite qual sua escolha:
+                    """);
+            escolha = scan.nextInt();
+            while (escolha < 1 || escolha > 3) {
+                System.out.println("Digite um valor válido:");
+                escolha = scan.nextInt();
+            }
+            switch (escolha) {
+                case 1 -> {
+                    arvore.preorder();
+                    System.out.println(arvore.getBuilderPreOrder());
+
+                    arvore.cleanBuilderPreOrder();
+                }
+                case 2 -> {
+                    arvore.inorder();
+                    System.out.println(arvore.getBuilderInOrder());
+
+                    arvore.cleanBuilderInOrder();
+                }
+                case 3 -> {
+                    arvore.postorder();
+                    System.out.println(arvore.getBuilderPostOrder());
+
+                    arvore.cleanBuilderPostOrder();
+                }
+                default -> System.out.println("erro ao caminhar");
+            }
+        } else
+            System.out.println("A árvore está vazia...");
+    }
+
     public static void run() {
         Scanner scan = new Scanner(System.in);
         int option;
         Arvore arvore = new Arvore();
-        System.out.println(TITULO);
+        System.out.println(titulo());
 
         do {
 
@@ -91,11 +214,11 @@ public class Menu {
             option = scan.nextInt();
 
             switch (option) {
-                case 1 -> arvore = MenuUtils.criaArvore(arvore);
-                case 2 -> arvore = MenuUtils.insere(arvore);
-                case 3 -> arvore = MenuUtils.exclui(arvore);
-                case 4 -> MenuUtils.procura(arvore);
-                case 5 -> MenuUtils.caminha(arvore);
+                case 1 -> arvore = criaArvore(arvore);
+                case 2 -> arvore = insere(arvore);
+                case 3 -> arvore = exclui(arvore);
+                case 4 -> procura(arvore);
+                case 5 -> caminha(arvore);
                 case 6 -> {
                     arvore.clear();
                     System.out.println("Árvore Limpa...");
