@@ -1,6 +1,8 @@
 package org.example.entity;
 
 
+import org.example.util.OrdenacaoUtil;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -278,7 +280,8 @@ public class Arvore<T extends Comparable> {
     }
     public List<Pessoa> procuraPorNome(String letra) {
         cleanPessoaInOrderList();
-        procuraNomeInorderList(letra);
+        procuraPorNome((No<String>) raiz, letra);
+        OrdenacaoUtil.quickSortPorNome(pessoaNomeInOrderList, 0, pessoaNomeInOrderList.size() - 1);
         return pessoaNomeInOrderList;
     }
 
@@ -288,26 +291,37 @@ public class Arvore<T extends Comparable> {
 
     public List<Pessoa> procuraPorDataNascimento(LocalDate inicio, LocalDate fim) {
         cleanPessoaNascimentoInOrderList();
-        procuraNascimentoInorderList(inicio, fim);
+        procuraPorNascimento((No<LocalDate>) raiz, inicio, fim);
+        OrdenacaoUtil.quickSortPorNascimento(pessoaNascimentoInOrderList, 0, pessoaNascimentoInOrderList.size() - 1);
         return pessoaNascimentoInOrderList;
-    }
-
-    public void procuraNascimentoInorderList(LocalDate inicio, LocalDate fim) {
-        procuraNascimentoInorderList(inicio, fim, raiz);
-    }
-
-    private void procuraNascimentoInorderList(LocalDate inicio, LocalDate fim, No<T> no) {
-
-        if (no != null) {
-            procuraNascimentoInorderList(inicio, fim, no.getEsquerda());
-            if (((LocalDate) no.getChave()).isAfter(inicio) && ((LocalDate) no.getChave()).isBefore(fim)) {
-                pessoaNascimentoInOrderList.add(no.getValor());
-            }
-            procuraNascimentoInorderList(inicio, fim, no.getDireita());
-        }
     }
 
     public void cleanPessoaNascimentoInOrderList() {
         this.pessoaNascimentoInOrderList = new ArrayList<>();
     }
+
+    private void procuraPorNome(No<String> no, String letra) {
+        if (no == null) {
+            return ;
+        }
+
+        if (no.getChave().startsWith(letra)) {
+            pessoaNomeInOrderList.add(no.getValor());
+        }
+        procuraPorNome(no.getEsquerda(), letra);
+        procuraPorNome(no.getDireita(), letra);
+    }
+
+    private void procuraPorNascimento(No<LocalDate> no, LocalDate inicio, LocalDate fim) {
+        if (no == null) {
+            return ;
+        }
+
+        if (no.getChave().isAfter(inicio) && no.getChave().isBefore(fim)) {
+            pessoaNascimentoInOrderList.add(no.getValor());
+        }
+        procuraPorNascimento(no.getEsquerda(), inicio, fim);
+        procuraPorNascimento(no.getDireita(), inicio, fim);
+    }
+
 }
