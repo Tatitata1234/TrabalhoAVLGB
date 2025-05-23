@@ -224,10 +224,15 @@ public class Arvore {
         No filhoEsqFilhoDir = filhoDir.getEsquerda();
         No vo = pai.getPai();
 
-        filhoDir.setPai(pai.getPai());
+        filhoDir.setPai(vo);
         filhoDir.setEsquerda(pai);
         pai.setPai(filhoDir);
         pai.setDireita(filhoEsqFilhoDir);
+
+        if (filhoEsqFilhoDir != null) {
+            filhoEsqFilhoDir.setPai(pai);
+        }
+
 
         if (pai == raiz) {
             raiz = filhoDir;
@@ -238,6 +243,9 @@ public class Arvore {
                 vo.setEsquerda(filhoDir);
             }
         }
+
+        corrigeAltura(pai);
+        corrigeAltura(filhoDir);
     }
 
     private void rotaSimplesDireita(No pai) {
@@ -245,10 +253,14 @@ public class Arvore {
         No filhoDirFilhoEsq = filhoEsq.getDireita();
         No vo = pai.getPai();
 
-        filhoEsq.setPai(pai.getPai());
+        filhoEsq.setPai(vo);
         filhoEsq.setDireita(pai);
         pai.setPai(filhoEsq);
         pai.setEsquerda(filhoDirFilhoEsq);
+
+        if (filhoDirFilhoEsq != null) {
+            filhoDirFilhoEsq.setPai(pai);
+        }
 
         if (pai == raiz) {
             raiz = filhoEsq;
@@ -259,6 +271,9 @@ public class Arvore {
                 vo.setEsquerda(filhoEsq);
             }
         }
+
+        corrigeAltura(pai);
+        corrigeAltura(filhoEsq);
     }
 
     public int calculaAltura(No raizAtual) {
@@ -274,14 +289,12 @@ public class Arvore {
         }
     }
 
-    private void corrigeAltura(No novoNo) {
-        No proximo = novoNo;
-        while (!Objects.equals(proximo, null)) {
-            int altura = calculaAltura(proximo);
-            altura++;
-            proximo.setAltura(altura);
-            proximo.setPonto(0);
-            proximo = proximo.getPai();
+    private void corrigeAltura(No no) {
+        while (no != null) {
+            int alturaEsq = (no.getEsquerda() != null) ? no.getEsquerda().getAltura() : 0;
+            int alturaDir = (no.getDireita() != null) ? no.getDireita().getAltura() : 0;
+            no.setAltura(1 + Math.max(alturaEsq, alturaDir));
+            no = no.getPai();
         }
     }
 
@@ -302,6 +315,5 @@ public class Arvore {
                 rotaSimplesEsquerda(pai);
             }
         }
-        corrigeAltura(pai);
     }
 }
