@@ -4,7 +4,7 @@ public class No<T extends Comparable> {
 
     private T chave;
 
-    private Pessoa valor;
+    private int valor;
 
     private No<T> esquerda;
 
@@ -21,11 +21,11 @@ public class No<T extends Comparable> {
         this.direita = null;
     }
 
-    public No(T chave, Pessoa valor) {
+    public No(T chave, int valor) {
         this(chave, null, null, valor);
     }
 
-    public No(T chave, No<T> esquerda, No<T> direita, Pessoa valor) {
+    public No(T chave, No<T> esquerda, No<T> direita, int valor) {
         this.chave = chave;
         this.esquerda = esquerda;
         this.direita = direita;
@@ -85,11 +85,11 @@ public class No<T extends Comparable> {
         this.pai = pai;
     }
 
-    public Pessoa getValor() {
+    public int getValor() {
         return valor;
     }
 
-    public void setValor(Pessoa valor) {
+    public void setValor(int valor) {
         this.valor = valor;
     }
 

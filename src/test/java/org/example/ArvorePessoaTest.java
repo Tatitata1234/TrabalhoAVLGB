@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.entity.Arvore;
 import org.example.entity.Pessoa;
+import org.example.util.OrdenacaoUtil;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -25,11 +26,11 @@ class ArvorePessoaTest {
         pessoas.add(new Pessoa("65521843342", "5012880168", "Roberto Braga", LocalDate.parse("07/01/1967", formatter), "Palmeira das Missões"));
 
         Arvore<String> arvoreCpf = new Arvore<>();
-        for (Pessoa p : pessoas) {
-            arvoreCpf.inserirEBalancearAVL(p.getCpf(), p);
+        for (int i = 0; i < pessoas.size(); i++) {
+            arvoreCpf.inserirEBalancearAVL(pessoas.get(i).getCpf(), i);
         }
-        Pessoa pessoa = arvoreCpf.procuraPorCpf("65521843342");
-        System.out.println(pessoa);
+        int pessoaId = arvoreCpf.procuraPorCpf("65521843342");
+        System.out.println(pessoas.get(pessoaId));
         System.out.println("para");
     }
 
@@ -48,13 +49,20 @@ class ArvorePessoaTest {
         pessoas.add(new Pessoa("65521843342", "5012880168", "Roberto Braga", LocalDate.parse("07/01/1967", formatter), "Palmeira das Missões"));
 
         Arvore<String> arvoreNome = new Arvore<>();
-        for (Pessoa p : pessoas) {
-            arvoreNome.inserirEBalancearAVL(p.getNome(), p);
+        for (int i = 0; i < pessoas.size(); i++) {
+            arvoreNome.inserirEBalancearAVL(pessoas.get(i).getNome(), i);
         }
-        List<Pessoa> pessoasList = arvoreNome.procuraPorNome("R");
+        List<Integer> pessoasIdList = arvoreNome.procuraPorNome("R");
+
+        List<Pessoa> pessoasList = new ArrayList<>();
+        for (Integer p : pessoasIdList) {
+            pessoasList.add(pessoas.get(p));
+        }
+        OrdenacaoUtil.quickSortPorNome(pessoasList, 0, pessoasList.size() - 1);
         for (Pessoa p : pessoasList) {
             System.out.println(p);
         }
+
         System.out.println("para");
     }
 
@@ -73,12 +81,19 @@ class ArvorePessoaTest {
         pessoas.add(new Pessoa("65521843342", "5012880168", "Roberto Braga", LocalDate.parse("07/01/1967", formatter), "Palmeira das Missões"));
 
         Arvore<LocalDate> arvoreNome = new Arvore<>();
-        for (Pessoa p : pessoas) {
-            arvoreNome.inserirEBalancearAVL(p.getNascimento(), p);
+        for (int i = 0; i < pessoas.size(); i++) {
+            arvoreNome.inserirEBalancearAVL(pessoas.get(i).getNascimento(), i);
         }
         LocalDate inicio = LocalDate.parse("07/01/1966", formatter);
         LocalDate fim = LocalDate.parse("02/02/1980", formatter);
-        List<Pessoa> pessoasList = arvoreNome.procuraPorDataNascimento(inicio, fim);
+        List<Integer> pessoasIdList = arvoreNome.procuraPorDataNascimento(inicio, fim);
+
+        
+        List<Pessoa> pessoasList = new ArrayList<>();
+        for (Integer p : pessoasIdList) {
+            pessoasList.add(pessoas.get(p));
+        }
+        OrdenacaoUtil.quickSortPorNascimento(pessoasList, 0, pessoasList.size() - 1);
         for (Pessoa p : pessoasList) {
             System.out.println(p);
         }

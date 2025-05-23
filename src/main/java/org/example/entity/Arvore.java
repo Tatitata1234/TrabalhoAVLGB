@@ -1,8 +1,6 @@
 package org.example.entity;
 
 
-import org.example.util.OrdenacaoUtil;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +9,9 @@ import java.util.Objects;
 public class Arvore<T extends Comparable> {
     private No<T> raiz = null;
 
-    private List<Pessoa> pessoaNomeInOrderList = new ArrayList<>();
+    private List<Integer> pessoaNomeInOrderList = new ArrayList<>();
 
-    private List<Pessoa> pessoaNascimentoInOrderList = new ArrayList<>();
+    private List<Integer> pessoaNascimentoInOrderList = new ArrayList<>();
 
     public No<T> procura(T el) {
         return procura(this.raiz, el);
@@ -45,7 +43,7 @@ public class Arvore<T extends Comparable> {
         return this.raiz;
     }
 
-    public No<T> inserirAVL(T el, Pessoa valor) {
+    public No<T> inserirAVL(T el, int valor) {
         No<T> no = raiz;
         No<T> anterior = null;
 
@@ -82,7 +80,7 @@ public class Arvore<T extends Comparable> {
         return novoNo;
     }
 
-    public void inserirEBalancearAVL(T el, Pessoa valor) {
+    public void inserirEBalancearAVL(T el, int valor) {
         No<T> noInserido = inserirAVL(el, valor);
         if (noInserido != null) {
             balancearAvl(noInserido);
@@ -193,14 +191,13 @@ public class Arvore<T extends Comparable> {
         }
     }
 
-    public Pessoa procuraPorCpf(T cpf) {
+    public int procuraPorCpf(T cpf) {
         return procura(cpf).getValor();
     }
 
-    public List<Pessoa> procuraPorNome(String letra) {
+    public List<Integer> procuraPorNome(String letra) {
         cleanPessoaInOrderList();
         procuraPorNome((No<String>) raiz, letra);
-        OrdenacaoUtil.quickSortPorNome(pessoaNomeInOrderList, 0, pessoaNomeInOrderList.size() - 1);
         return pessoaNomeInOrderList;
     }
 
@@ -208,10 +205,9 @@ public class Arvore<T extends Comparable> {
         this.pessoaNomeInOrderList = new ArrayList<>();
     }
 
-    public List<Pessoa> procuraPorDataNascimento(LocalDate inicio, LocalDate fim) {
+    public List<Integer> procuraPorDataNascimento(LocalDate inicio, LocalDate fim) {
         cleanPessoaNascimentoInOrderList();
         procuraPorNascimento((No<LocalDate>) raiz, inicio, fim);
-        OrdenacaoUtil.quickSortPorNascimento(pessoaNascimentoInOrderList, 0, pessoaNascimentoInOrderList.size() - 1);
         return pessoaNascimentoInOrderList;
     }
 
