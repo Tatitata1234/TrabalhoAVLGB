@@ -11,12 +11,6 @@ import java.util.Objects;
 public class Arvore<T extends Comparable> {
     private No<T> raiz = null;
 
-    private StringBuilder builderInOrder = new StringBuilder();
-
-    private StringBuilder builderPostOrder = new StringBuilder();
-
-    private StringBuilder builderPreOrder = new StringBuilder();
-
     private List<Pessoa> pessoaNomeInOrderList = new ArrayList<>();
 
     private List<Pessoa> pessoaNascimentoInOrderList = new ArrayList<>();
@@ -202,7 +196,7 @@ public class Arvore<T extends Comparable> {
     public Pessoa procuraPorCpf(T cpf) {
         return procura(cpf).getValor();
     }
-    
+
     public List<Pessoa> procuraPorNome(String letra) {
         cleanPessoaInOrderList();
         procuraPorNome((No<String>) raiz, letra);
