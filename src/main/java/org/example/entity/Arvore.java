@@ -39,43 +39,6 @@ public class Arvore<T extends Comparable> {
         }
     }
 
-    public void preorder() {
-        preorder(raiz);
-    }
-
-    private void preorder(No<T> no) {
-        if (no != null) {
-            builderPreOrder.append(no.getChave()).append(" ");
-            preorder(no.getEsquerda());
-            preorder(no.getDireita());
-        }
-    }
-
-    public void inorder() {
-        inorder(raiz);
-    }
-
-    private void inorder(No<T> no) {
-
-        if (no != null) {
-            inorder(no.getEsquerda());
-            builderInOrder.append(no.getChave()).append(" ");
-            inorder(no.getDireita());
-        }
-    }
-
-    public void postorder() {
-        postorder(raiz);
-    }
-
-    private void postorder(No<T> no) {
-        if (no != null) {
-            postorder(no.getEsquerda());
-            postorder(no.getDireita());
-            builderPostOrder.append(no.getChave()).append(" ");
-        }
-    }
-
     public void clear() {
         this.raiz = null;
     }
@@ -86,30 +49,6 @@ public class Arvore<T extends Comparable> {
 
     public No<T> getRaiz() {
         return this.raiz;
-    }
-
-    public String getBuilderInOrder() {
-        return builderInOrder.toString().trim();
-    }
-
-    public void cleanBuilderInOrder() {
-        this.builderInOrder = new StringBuilder();
-    }
-
-    public String getBuilderPostOrder() {
-        return builderPostOrder.toString().trim();
-    }
-
-    public void cleanBuilderPostOrder() {
-        this.builderPostOrder = new StringBuilder();
-    }
-
-    public String getBuilderPreOrder() {
-        return builderPreOrder.toString().trim();
-    }
-
-    public void cleanBuilderPreOrder() {
-        this.builderPreOrder = new StringBuilder();
     }
 
     public No<T> inserirAVL(T el, Pessoa valor) {
@@ -263,21 +202,7 @@ public class Arvore<T extends Comparable> {
     public Pessoa procuraPorCpf(T cpf) {
         return procura(cpf).getValor();
     }
-
-    public void procuraNomeInorderList(String letra) {
-        procuraNomeInorderList(letra, raiz);
-    }
-
-    private void procuraNomeInorderList(String letra, No<T> no) {
-
-        if (no != null) {
-            procuraNomeInorderList(letra, no.getEsquerda());
-            if (((String) no.getChave()).startsWith(letra)) {
-                pessoaNomeInOrderList.add(no.getValor());
-            }
-            procuraNomeInorderList(letra, no.getDireita());
-        }
-    }
+    
     public List<Pessoa> procuraPorNome(String letra) {
         cleanPessoaInOrderList();
         procuraPorNome((No<String>) raiz, letra);
