@@ -1,10 +1,13 @@
 package org.example.entity;
 
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-public class Arvore {
-    private No raiz = null;
+public class Arvore<T extends Comparable> {
+    private No<T> raiz = null;
 
     private StringBuilder builderInOrder = new StringBuilder();
 
@@ -12,11 +15,15 @@ public class Arvore {
 
     private StringBuilder builderPreOrder = new StringBuilder();
 
-    public No procura(Integer el) {
+    private List<Pessoa> pessoaNomeInOrderList = new ArrayList<>();
+
+    private List<Pessoa> pessoaNascimentoInOrderList = new ArrayList<>();
+
+    public No<T> procura(T el) {
         return procura(this.raiz, el);
     }
 
-    private No procura(No no, Integer el) {
+    private No<T> procura(No<T> no, T el) {
         if (no == null) {
             return null;
         }
@@ -34,7 +41,7 @@ public class Arvore {
         preorder(raiz);
     }
 
-    private void preorder(No no) {
+    private void preorder(No<T> no) {
         if (no != null) {
             builderPreOrder.append(no.getChave()).append(" ");
             preorder(no.getEsquerda());
@@ -46,7 +53,7 @@ public class Arvore {
         inorder(raiz);
     }
 
-    private void inorder(No no) {
+    private void inorder(No<T> no) {
 
         if (no != null) {
             inorder(no.getEsquerda());
@@ -59,7 +66,7 @@ public class Arvore {
         postorder(raiz);
     }
 
-    private void postorder(No no) {
+    private void postorder(No<T> no) {
         if (no != null) {
             postorder(no.getEsquerda());
             postorder(no.getDireita());
@@ -75,7 +82,7 @@ public class Arvore {
         return this.raiz != null;
     }
 
-    public No getRaiz() {
+    public No<T> getRaiz() {
         return this.raiz;
     }
 
@@ -103,14 +110,14 @@ public class Arvore {
         this.builderPreOrder = new StringBuilder();
     }
 
-    public No inserirAVL(Integer el) {
-        No no = raiz;
-        No anterior = null;
+    public No<T> inserirAVL(T el, Pessoa valor) {
+        No<T> no = raiz;
+        No<T> anterior = null;
 
         if (procura(el) != null)
             return null;
 
-        No novoNo = new No(el);
+        No<T> novoNo = new No<>(el, valor);
         if (raiz == null) {
             raiz = novoNo;
             raiz.setAltura(1);
@@ -140,19 +147,19 @@ public class Arvore {
         return novoNo;
     }
 
-    public void inserirEBalancearAVL(Integer el) {
-        No noInserido = inserirAVL(el);
+    public void inserirEBalancearAVL(T el, Pessoa valor) {
+        No<T> noInserido = inserirAVL(el, valor);
         if (noInserido != null) {
             balancearAvl(noInserido);
         }
         corrigeAltura(noInserido);
     }
 
-    private void balancearAvl(No folha) {
+    private void balancearAvl(No<T> folha) {
         if (folha == raiz) {
             return;
         }
-        No pai = folha.getPai();
+        No<T> pai = folha.getPai();
         while (pai != null) {
             int filhoEsqAltura = pai.getEsquerda() != null ? pai.getEsquerda().getAltura() : 0;
             int filhoDirAltura = pai.getDireita() != null ? pai.getDireita().getAltura() : 0;
@@ -166,63 +173,10 @@ public class Arvore {
         }
     }
 
-    private No maiorNoSubArvore(No raiz) {
-        if (raiz.getDireita() == null)
-            return raiz;
-
-        // busca o elemento mais à diretia de uma subárvore
-        No noBusca = raiz.getDireita();
-        while (noBusca.getDireita() != null) {
-            noBusca = noBusca.getDireita();
-        }
-        return noBusca;
-    }
-
-    private void excluirPorCopia(No no) {
-        No raizSubEsquerda = no.getEsquerda();
-        No noMaiorEsquerda = maiorNoSubArvore(raizSubEsquerda);
-        int chaveMaior = noMaiorEsquerda.getChave();
-
-        no.setChave(chaveMaior);
-
-        excluirQuandoUmFilhoOuMenos(noMaiorEsquerda);
-
-        balancearAvl(noMaiorEsquerda);
-    }
-
-    private void excluirQuandoUmFilhoOuMenos(No no) {
-        No pai = no.getPai();
-        No filho = no.getDireita() != null ? no.getDireita() : no.getEsquerda();
-
-        if (pai == null) {
-            this.raiz = filho;
-        } else {
-            if (no.getChave() > pai.getChave()) {
-                pai.setDireita(filho);
-            } else {
-                pai.setEsquerda(filho);
-            }
-        }
-
-        balancearAvl(Objects.requireNonNullElse(filho, no));
-    }
-
-    public void excluir(Integer el) {
-        No desejado = procura(el);
-        if (desejado == null)
-            return;
-        if (desejado.getDireita() != null && desejado.getEsquerda() != null) {
-            excluirPorCopia(desejado);
-        } else {
-            excluirQuandoUmFilhoOuMenos(desejado);
-        }
-
-    }
-
-    private void rotaSimplesEsquerda(No pai) {
-        No filhoDir = pai.getDireita();
-        No filhoEsqFilhoDir = filhoDir.getEsquerda();
-        No vo = pai.getPai();
+    private void rotaSimplesEsquerda(No<T> pai) {
+        No<T> filhoDir = pai.getDireita();
+        No<T> filhoEsqFilhoDir = filhoDir.getEsquerda();
+        No<T> vo = pai.getPai();
 
         filhoDir.setPai(vo);
         filhoDir.setEsquerda(pai);
@@ -248,10 +202,10 @@ public class Arvore {
         corrigeAltura(filhoDir);
     }
 
-    private void rotaSimplesDireita(No pai) {
-        No filhoEsq = pai.getEsquerda();
-        No filhoDirFilhoEsq = filhoEsq.getDireita();
-        No vo = pai.getPai();
+    private void rotaSimplesDireita(No<T> pai) {
+        No<T> filhoEsq = pai.getEsquerda();
+        No<T> filhoDirFilhoEsq = filhoEsq.getDireita();
+        No<T> vo = pai.getPai();
 
         filhoEsq.setPai(vo);
         filhoEsq.setDireita(pai);
@@ -276,20 +230,7 @@ public class Arvore {
         corrigeAltura(filhoEsq);
     }
 
-    public int calculaAltura(No raizAtual) {
-        if (raizAtual == null) {
-            return -1;
-        } else {
-            int esq = calculaAltura(raizAtual.getEsquerda());
-            int dir = calculaAltura(raizAtual.getDireita());
-            if (esq > dir)
-                return esq + 1;
-            else
-                return dir + 1;
-        }
-    }
-
-    private void corrigeAltura(No no) {
+    private void corrigeAltura(No<T> no) {
         while (no != null) {
             int alturaEsq = (no.getEsquerda() != null) ? no.getEsquerda().getAltura() : 0;
             int alturaDir = (no.getDireita() != null) ? no.getDireita().getAltura() : 0;
@@ -298,7 +239,7 @@ public class Arvore {
         }
     }
 
-    private void doBalanceamento(No pai, int diferenca) {
+    private void doBalanceamento(No<T> pai, int diferenca) {
         if (diferenca > 0) {
             if (pai.getEsquerda().getPonto() >= 0) {
                 rotaSimplesDireita(pai);
@@ -315,5 +256,58 @@ public class Arvore {
                 rotaSimplesEsquerda(pai);
             }
         }
+    }
+
+    public Pessoa procuraPorCpf(T cpf) {
+        return procura(cpf).getValor();
+    }
+
+    public void procuraNomeInorderList(String letra) {
+        procuraNomeInorderList(letra, raiz);
+    }
+
+    private void procuraNomeInorderList(String letra, No<T> no) {
+
+        if (no != null) {
+            procuraNomeInorderList(letra, no.getEsquerda());
+            if (((String) no.getChave()).startsWith(letra)) {
+                pessoaNomeInOrderList.add(no.getValor());
+            }
+            procuraNomeInorderList(letra, no.getDireita());
+        }
+    }
+    public List<Pessoa> procuraPorNome(String letra) {
+        cleanPessoaInOrderList();
+        procuraNomeInorderList(letra);
+        return pessoaNomeInOrderList;
+    }
+
+    public void cleanPessoaInOrderList() {
+        this.pessoaNomeInOrderList = new ArrayList<>();
+    }
+
+    public List<Pessoa> procuraPorDataNascimento(LocalDate inicio, LocalDate fim) {
+        cleanPessoaNascimentoInOrderList();
+        procuraNascimentoInorderList(inicio, fim);
+        return pessoaNascimentoInOrderList;
+    }
+
+    public void procuraNascimentoInorderList(LocalDate inicio, LocalDate fim) {
+        procuraNascimentoInorderList(inicio, fim, raiz);
+    }
+
+    private void procuraNascimentoInorderList(LocalDate inicio, LocalDate fim, No<T> no) {
+
+        if (no != null) {
+            procuraNascimentoInorderList(inicio, fim, no.getEsquerda());
+            if (((LocalDate) no.getChave()).isAfter(inicio) && ((LocalDate) no.getChave()).isBefore(fim)) {
+                pessoaNascimentoInOrderList.add(no.getValor());
+            }
+            procuraNascimentoInorderList(inicio, fim, no.getDireita());
+        }
+    }
+
+    public void cleanPessoaNascimentoInOrderList() {
+        this.pessoaNascimentoInOrderList = new ArrayList<>();
     }
 }

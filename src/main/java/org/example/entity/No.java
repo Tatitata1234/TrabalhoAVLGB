@@ -1,57 +1,60 @@
 package org.example.entity;
 
-public class No {
+public class No<T extends Comparable> {
 
-    private Integer chave;
+    private T chave;
 
-    private No esquerda;
+    private Pessoa valor;
 
-    private No direita;
+    private No<T> esquerda;
+
+    private No<T> direita;
 
     private int altura;
 
     private int ponto;
 
-    private No pai;
+    private No<T> pai;
 
     public No() {
         this.esquerda = null;
         this.direita = null;
     }
 
-    public No(Integer chave) {
-        this(chave, null, null);
+    public No(T chave, Pessoa valor) {
+        this(chave, null, null, valor);
     }
 
-    public No(Integer chave, No esquerda, No direita) {
+    public No(T chave, No<T> esquerda, No<T> direita, Pessoa valor) {
         this.chave = chave;
         this.esquerda = esquerda;
         this.direita = direita;
+        this.valor = valor;
         this.altura = 0;
         this.ponto = 0;
     }
 
-    public Integer getChave() {
+    public T getChave() {
         return chave;
     }
 
-    public void setChave(Integer chave) {
+    public void setChave(T chave) {
         this.chave = chave;
     }
 
-    public No getEsquerda() {
+    public No<T> getEsquerda() {
         return esquerda;
     }
 
-    public void setEsquerda(No esquerda) {
+    public void setEsquerda(No<T> esquerda) {
         this.esquerda = esquerda;
     }
 
-    public No getDireita() {
+    public No<T> getDireita() {
         return direita;
     }
 
-    public void setDireita(No direita) {
+    public void setDireita(No<T> direita) {
         this.direita = direita;
     }
 
@@ -74,12 +77,20 @@ public class No {
         this.ponto = ponto;
     }
 
-    public No getPai() {
+    public No<T> getPai() {
         return pai;
     }
 
-    public void setPai(No pai) {
+    public void setPai(No<T> pai) {
         this.pai = pai;
+    }
+
+    public Pessoa getValor() {
+        return valor;
+    }
+
+    public void setValor(Pessoa valor) {
+        this.valor = valor;
     }
 
     @Override

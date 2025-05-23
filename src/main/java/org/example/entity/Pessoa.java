@@ -7,20 +7,20 @@ public class Pessoa {
     private String rg;
     private String nome;
     private LocalDate nascimento;
-    private String cidade;
+    private String cidadeNascimento;
 
     public Pessoa(String cpf, String rg, String nome, LocalDate nascimento, String cidade) {
         this.cpf = cpf;
         this.rg = rg;
         this.nome = nome;
         this.nascimento = nascimento;
-        this.cidade = cidade;
+        this.cidadeNascimento = cidade;
     }
 
     @Override
     public String toString() {
         return String.format("Pessoa {cpf='%s', rg='%s', nome='%s', nascimento=%s, cidade='%s'}",
-                cpf, rg, nome, nascimento, cidade);
+                cpf, rg, nome, nascimento, cidadeNascimento);
     }
 
     public String getCpf() {
@@ -55,11 +55,11 @@ public class Pessoa {
         this.nascimento = nascimento;
     }
 
-    public String getCidade() {
-        return cidade;
+    public String getCidadeNascimento() {
+        return cidadeNascimento;
     }
 
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
+    public void setCidadeNascimento(String cidadeNascimento) {
+        this.cidadeNascimento = cidadeNascimento;
     }
 }
