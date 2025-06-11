@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.entity.Arvore;
 import org.example.entity.Pessoa;
+import org.example.util.LeituraDeArquivo;
 import org.example.util.OrdenacaoUtil;
 import org.junit.jupiter.api.Test;
 
@@ -97,6 +98,15 @@ class ArvorePessoaTest {
         for (Pessoa p : pessoasList) {
             System.out.println(p);
         }
+        System.out.println("para");
+    }
+
+    @Test
+    void deveLerArquivo() {
+        List<Pessoa> pessoas = new ArrayList<>();
+
+        pessoas = LeituraDeArquivo.leDadosECriaPessoas("data/nomes.csv");
+
         System.out.println("para");
     }
 }
