@@ -88,7 +88,7 @@ class ArvorePessoaTest {
         LocalDate fim = LocalDate.parse("02/02/1980", formatter);
         List<Integer> pessoasIdList = arvoreNome.procuraPorDataNascimento(inicio, fim);
 
-        
+
         List<Pessoa> pessoasList = new ArrayList<>();
         for (Integer p : pessoasIdList) {
             pessoasList.add(pessoas.get(p));
