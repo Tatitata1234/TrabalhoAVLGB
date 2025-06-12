@@ -2,234 +2,158 @@ package org.example;
 
 import org.example.entity.Arvore;
 import org.example.entity.No;
+import org.example.entity.Pessoa;
+import org.example.util.LeituraDeArquivo;
+import org.example.util.OrdenacaoUtil;
+import org.example.util.Teclado;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
-public class Menu {
+public class Menu <T extends Comparable>{
 
-//    public static final String MENU_OPCOES = """
-//
-//            1 - Criar uma Árvore
-//            2 - Inserir um valor
-//            3 - Excluir um valor
-//            4 - Buscar um valor
-//            5 - Caminhar pela árvore
-//            6 - Limpar a árvore
-//            7 - Sair
-//            Digite a Opção:
-//
-//            """;
-//
-//    private Menu() {}
-//
-//    public static void main(String[] args) {
-//        Menu.run();
-//    }
-//
-//    public static String titulo() {
-//        return ("""
-//
-//                --r-----------------------------------------------------------------------------------------------------
-//
-//                  /$$$$$$                                                           /$$$$$$  /$$    /$$ /$$     \s
-//                 /$$__  $$                                                         /$$__  $$| $$   | $$| $$     \s
-//                | $$  \\ $$  /$$$$$$  /$$    /$$ /$$$$$$   /$$$$$$   /$$$$$$       | $$  \\ $$| $$   | $$| $$     \s
-//                | $$$$$$$$ /$$__  $$|  $$  /$$//$$__  $$ /$$__  $$ /$$__  $$      | $$$$$$$$|  $$ / $$/| $$     \s
-//                | $$__  $$| $$  \\__/ \\  $$/$$/| $$  \\ $$| $$  \\__/| $$$$$$$$      | $$__  $$ \\  $$ $$/ | $$     \s
-//                | $$  | $$| $$        \\  $$$/ | $$  | $$| $$      | $$_____/      | $$  | $$  \\  $$$/  | $$     \s
-//                | $$  | $$| $$         \\  $/  |  $$$$$$/| $$      |  $$$$$$$      | $$  | $$   \\  $/   | $$$$$$$$
-//                |__/  |__/|__/          \\_/    \\______/ |__/       \\_______/      |__/  |__/    \\_/    |________/
-//                                                                                                                \s
-//                                                                                                                \s
-//                                                                                                                \s
-//
-//                Integrantes: Thais Landfeldt, Victório Faraco, João Trajano
-//                -------------------------------------------------------------------------------------------------------
-//                """);
-//    }
-//
-//    public static void arvoreString(Arvore a) {
-//        StringBuilder arvere = new StringBuilder();
-//        No no = a.getRaiz();
-//        int h = 0;
-//        arvere.append("   ");
-//        arvere.append(no.getChave()).append("\n");
-//
-//        arvoreString(no.getEsquerda(), h + 1, arvere);
-//        arvoreString(no.getDireita(), h + 1, arvere);
-//
-//        System.out.println(arvere);
-//    }
-//
-//    public static StringBuilder arvoreString(No no, int h, StringBuilder arvere) {
-//        if (no == null) {
-//            return arvere;
-//        }
-//        for (int i = 0; i < h; i++) {
-//            arvere.append("   ");
-//        }
-//
-//        arvere.append("|->").append(no.getChave()).append("\n");
-//
-//        arvoreString(no.getEsquerda(), h + 1, arvere);
-//        arvoreString(no.getDireita(), h + 1, arvere);
-//
-//        return arvere;
-//    }
-//
-//    private static Arvore criaArvore(Arvore arvore) {
-//        Scanner scan = new Scanner(System.in);
-//        int escolha;
-//
-//        if (arvore.isNotEmpty()) {
-//            System.out.println("Arvore ja criada...");
-//            System.out.println("Deseja Criar outra árvore ?\n1 - Sim\nQualquer outro número - Não");
-//            escolha = scan.nextInt();
-//            if (escolha == 1) {
-//                arvore.clear();
-//                System.out.println("Criando árvore, digite o valor a ser inserido:\n");
-//                arvore.inserirEBalancearAVL(scan.nextInt());
-//            }
-//        } else {
-//            System.out.println("Criando árvore...");
-//            System.out.println("Digite o número que deseja inserir");
-//            arvore.inserirEBalancearAVL(scan.nextInt());
-//        }
-//        return arvore;
-//    }
-//
-//    private static Arvore insere(Arvore arvore) {
-//        Scanner scan = new Scanner(System.in);
-//        int escolha;
-//        if (arvore.isNotEmpty()) {
-//            System.out.println("Digite o número que deseja inserir");
-//            escolha = scan.nextInt();
-//            while (arvore.procura(escolha) != null) {
-//                System.out.println("Esse nó ja está na árvore, digite outro número:\n");
-//                escolha = scan.nextInt();
-//            }
-//
-//            arvore.inserirEBalancearAVL(escolha);
-//        } else {
-//            System.out.println("Árvore ainda não criada...");
-//        }
-//        return arvore;
-//    }
-//
-//    private static void procura(Arvore arvore) {
-//
-//        Scanner scan = new Scanner(System.in);
-//        int escolha;
-//
-//        if (arvore.isNotEmpty()) {
-//            System.out.println("Digite o número que deseja procurar");
-//            escolha = scan.nextInt();
-//
-//            while (arvore.procura(escolha) == null) {
-//
-//                System.out.println("Esse valor não existe na árvore, digite outro número:\n");
-//                escolha = scan.nextInt();
-//
-//            }
-//            System.out.println(arvore.procura(escolha).toString());
-//
-//        } else {
-//
-//            System.out.println("Árvore ainda não criada");
-//
-//        }
-//    }
-//
-//    private static Arvore exclui(Arvore arvore) {
-//        int escolha;
-//        Scanner scan = new Scanner(System.in);
-//        if (arvore.isNotEmpty()) {
-//            System.out.println("Digite o número que deseja excluir");
-//            escolha = scan.nextInt();
-//            while (arvore.procura(escolha) == null) {
-//                System.out.println("Esse nó não existe na árvore, digite outro número:\n");
-//                escolha = scan.nextInt();
-//            }
-//            arvore.excluir(escolha);
-//        } else {
-//            System.out.println("Árvore ainda não criada");
-//        }
-//        return arvore;
-//    }
-//
-//    private static void caminha(Arvore arvore) {
-//        Scanner scan = new Scanner(System.in);
-//        int escolha;
-//        if (arvore.isNotEmpty()) {
-//            System.out.println("""
-//                    Como deseja visualizar o caminho da arvore?
-//                    1 - Pré-Ordem
-//                    2 - Em  Ordem
-//                    3 - Pós-Ordem
-//                    Digite qual sua escolha:
-//                    """);
-//            escolha = scan.nextInt();
-//            while (escolha < 1 || escolha > 3) {
-//                System.out.println("Digite um valor válido:");
-//                escolha = scan.nextInt();
-//            }
-//            switch (escolha) {
-//                case 1 -> {
-//                    arvore.preorder();
-//                    System.out.println(arvore.getBuilderPreOrder());
-//
-//                    arvore.cleanBuilderPreOrder();
-//                }
-//                case 2 -> {
-//                    arvore.inorder();
-//                    System.out.println(arvore.getBuilderInOrder());
-//
-//                    arvore.cleanBuilderInOrder();
-//                }
-//                case 3 -> {
-//                    arvore.postorder();
-//                    System.out.println(arvore.getBuilderPostOrder());
-//
-//                    arvore.cleanBuilderPostOrder();
-//                }
-//                default -> System.out.println("erro ao caminhar");
-//            }
-//        } else
-//            System.out.println("A árvore está vazia...");
-//    }
-//
-//    public static void run() {
-//        Scanner scan = new Scanner(System.in);
-//        int option;
-//        Arvore arvore = new Arvore();
-//        System.out.println(titulo());
-//
-//        do {
-//
-//            if (arvore.isNotEmpty()) {
-//                arvoreString(arvore);
-//            }
-//
-//            System.out.println(MENU_OPCOES);
-//            option = scan.nextInt();
-//
-//            switch (option) {
-//                case 1 -> arvore = criaArvore(arvore);
-//                case 2 -> arvore = insere(arvore);
-//                case 3 -> arvore = exclui(arvore);
-//                case 4 -> procura(arvore);
-//                case 5 -> caminha(arvore);
-//                case 6 -> {
-//                    arvore.clear();
-//                    System.out.println("Árvore Limpa...");
-//                }
-//                case 7 -> System.out.println("Saindo...\n\n\n");
-//                default -> System.out.println("Opção inválida...");
-//            }
-//
-//        } while (option != 7);
-//
-//        scan.close();
-//    }
+   private Menu() {}
 
+   public static void main(String[] args) {
+      Scanner sc = new Scanner(System.in);
+
+      List<Pessoa> pessoas = new ArrayList<>();
+      pessoas = LeituraDeArquivo.leDadosECriaPessoas("data/nomes.csv");
+
+      Arvore<LocalDate> arvoreNascimento = new Arvore<>();
+      for (int i = 0; i < pessoas.size(); i++) {
+         arvoreNascimento.inserirEBalancearAVL(pessoas.get(i).getNascimento(), i);
+      }
+
+      Arvore<String> arvoreNome = new Arvore<>();
+      for (int i = 0; i < pessoas.size(); i++) {
+         arvoreNome.inserirEBalancearAVL(pessoas.get(i).getNome(), i);
+      }
+
+      Arvore<String> arvoreCpf = new Arvore<>();
+      for (int i = 0; i < pessoas.size(); i++) {
+         arvoreCpf.inserirEBalancearAVL(pessoas.get(i).getCpf(), i);
+      }
+
+
+      System.out.println(Menu.MENU_TITULO);
+      int op = -1;
+      do {
+         try{
+            System.out.println(Menu.MENU_OPCOES);
+            op = sc.nextInt();
+         }catch (Exception e){
+            System.out.println("Não foi digitado um número");
+            sc.nextLine();
+         }
+
+         executaOP(op, pessoas, arvoreNome, arvoreCpf, arvoreNascimento);
+
+      }while (op!=0);
+   }
+
+   private static void executaOP(
+           int op,
+           List<Pessoa> pessoas,
+           Arvore<String> arvoreNome,
+           Arvore<String> arvoreCpf,
+           Arvore<LocalDate> arvoreNascimento
+   ) {
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+      switch(op){
+         case 1:
+            try {
+               String input = Teclado.leString("Digite o cpf de quem deseja buscar:\n");
+               procuraEImprimePessoaPorCPF(pessoas, arvoreCpf, input);
+            }catch (Exception e){
+               System.out.println("CPF inválido: " + e.getMessage());
+            }
+            break;
+         case 2:
+            try {
+               String input = Teclado.leString("Digite o Nome de quem deseja buscar:\n");
+               procuraEImprimePessoasPorNome(pessoas, arvoreNome, input);
+            }catch (Exception e){
+               System.out.println("Nome inválido: " + e.getMessage());
+            }
+            break;
+         case 3:
+            try {
+               String stringInicio = Teclado.leString(
+                       "Digite a data inicial que deseja procurar:\nex.: dd/MM/yyyy\n"
+               );
+               String stringFinal = Teclado.leString(
+                       "Digite a data final que deseja procurar:\nex.: dd/MM/yyyy\n"
+               );
+               LocalDate inicio = LocalDate.parse(stringInicio, formatter);
+               LocalDate fim = LocalDate.parse(stringFinal, formatter);
+               procuraEImprimePessoasPorData(pessoas, arvoreNascimento, inicio, fim);
+            }catch (Exception e){
+               System.out.println("Data inválida: " + e.getMessage());
+            }
+            break;
+      }
+   }
+
+   public static final String MENU_OPCOES = """
+
+        1 - Procura por CPF
+        2 - Procura por Nome
+        3 - Procura por Data
+        0 - Sair
+        Digite a Opção:
+
+        """;
+
+
+   public static final String MENU_TITULO = """
+
+        -------------------------------------------------------------------------------------------------------
+        ▄▄▄▄▄▄▄ ▄▄▄▄▄▄   ▄▄   ▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄   ▄▄▄▄▄▄▄    ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄▄ ▄▄▄▄▄▄ 
+        █       █   ▄  █ █  █ █  █       █   ▄  █ █       █  █       █       █       █       █       █      █
+        █   ▄   █  █ █ █ █  █▄█  █   ▄   █  █ █ █ █    ▄▄▄█  █    ▄  █    ▄▄▄█  ▄▄▄▄▄█  ▄▄▄▄▄█   ▄   █  ▄   █
+        █  █▄█  █   █▄▄█▄█       █  █ █  █   █▄▄█▄█   █▄▄▄   █   █▄█ █   █▄▄▄█ █▄▄▄▄▄█ █▄▄▄▄▄█  █ █  █ █▄█  █
+        █       █    ▄▄  █       █  █▄█  █    ▄▄  █    ▄▄▄█  █    ▄▄▄█    ▄▄▄█▄▄▄▄▄  █▄▄▄▄▄  █  █▄█  █      █
+        █   ▄   █   █  █ ██     ██       █   █  █ █   █▄▄▄   █   █   █   █▄▄▄ ▄▄▄▄▄█ █▄▄▄▄▄█ █       █  ▄   █
+        █▄▄█ █▄▄█▄▄▄█  █▄█ █▄▄▄█ █▄▄▄▄▄▄▄█▄▄▄█  █▄█▄▄▄▄▄▄▄█  █▄▄▄█   █▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄▄▄▄▄▄▄█▄█ █▄▄█
+
+
+        Integrantes: Thais Landfeldt, Victório Faraco, João Trajano
+        -------------------------------------------------------------------------------------------------------
+           """;
+   public static void procuraEImprimePessoasPorData(List<Pessoa> pessoas,Arvore<LocalDate> arvore, LocalDate inicio, LocalDate fim) {
+      List<Integer> pessoasIdList = arvore.procuraPorDataNascimento(inicio, fim, 1, true);
+      List<Pessoa> pessoasList = new ArrayList<>();
+      for (Integer p : pessoasIdList) {
+         pessoasList.add(pessoas.get(p));
+      }
+      OrdenacaoUtil.quickSortPorNascimento(pessoasList, 0, pessoasList.size() - 1);
+      for (Pessoa p : pessoasList) {
+         System.out.println(p);
+      }
+   }
+   public static void procuraEImprimePessoaPorCPF(List<Pessoa> pessoas, Arvore<String> arvore, String cpf){
+
+      int pessoaId = arvore.procuraPorCpf(cpf,1,true);
+      System.out.println(pessoas.get(pessoaId));
+   }
+   public static void procuraEImprimePessoasPorNome(List<Pessoa> pessoas, Arvore<String> arvore, String nome){
+      List<Integer> pessoasIdList = arvore.procuraPorNome(nome, 1, true);
+
+
+      List<Pessoa> pessoasList = new ArrayList<>();
+      for (Integer p : pessoasIdList) {
+         pessoasList.add(pessoas.get(p));
+      }
+      OrdenacaoUtil.quickSortPorNome(pessoasList, 0, pessoasList.size() - 1);
+      for (Pessoa p : pessoasList) {
+         System.out.println(p);
+      }
+   }
+
+
+        
 }

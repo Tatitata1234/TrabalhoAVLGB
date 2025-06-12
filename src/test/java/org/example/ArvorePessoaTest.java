@@ -2,8 +2,11 @@ package org.example;
 
 import org.example.entity.Arvore;
 import org.example.entity.Pessoa;
+import org.example.util.LeituraDeArquivo;
 import org.example.util.OrdenacaoUtil;
 import org.junit.jupiter.api.Test;
+
+import org.example.Menu;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +32,7 @@ class ArvorePessoaTest {
         for (int i = 0; i < pessoas.size(); i++) {
             arvoreCpf.inserirEBalancearAVL(pessoas.get(i).getCpf(), i);
         }
-        int pessoaId = arvoreCpf.procuraPorCpf("65521843342");
+        int pessoaId = arvoreCpf.procuraPorCpf("65521843342", 1,false);
         System.out.println(pessoas.get(pessoaId));
         System.out.println("para");
     }
@@ -52,7 +55,7 @@ class ArvorePessoaTest {
         for (int i = 0; i < pessoas.size(); i++) {
             arvoreNome.inserirEBalancearAVL(pessoas.get(i).getNome(), i);
         }
-        List<Integer> pessoasIdList = arvoreNome.procuraPorNome("R");
+        List<Integer> pessoasIdList = arvoreNome.procuraPorNome("R",1,false);
 
         List<Pessoa> pessoasList = new ArrayList<>();
         for (Integer p : pessoasIdList) {
@@ -86,7 +89,7 @@ class ArvorePessoaTest {
         }
         LocalDate inicio = LocalDate.parse("07/01/1966", formatter);
         LocalDate fim = LocalDate.parse("02/02/1980", formatter);
-        List<Integer> pessoasIdList = arvoreNome.procuraPorDataNascimento(inicio, fim);
+        List<Integer> pessoasIdList = arvoreNome.procuraPorDataNascimento(inicio, fim,0,false);
 
 
         List<Pessoa> pessoasList = new ArrayList<>();
@@ -98,5 +101,56 @@ class ArvorePessoaTest {
             System.out.println(p);
         }
         System.out.println("para");
+    }
+
+    @Test
+    void deveLerArquivo() {
+        List<Pessoa> pessoas = new ArrayList<>();
+
+        pessoas = LeituraDeArquivo.leDadosECriaPessoas("data/nomes.csv");
+
+        System.out.println("para");
+    }
+
+    @Test
+    void deveImprimir() {
+
+        List<Pessoa> pessoas = new ArrayList<>();
+
+        pessoas = LeituraDeArquivo.leDadosECriaPessoas("data/nomes.csv");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+
+
+        LocalDate inicio = LocalDate.parse("01/01/1966", formatter);
+        LocalDate fim = LocalDate.parse("31/12/1980", formatter);
+
+        Arvore<LocalDate> arvoreNascimento = new Arvore<>();
+        for (int i = 0; i < pessoas.size(); i++) {
+            arvoreNascimento.inserirEBalancearAVL(pessoas.get(i).getNascimento(), i);
+        }
+
+        Arvore<String> arvoreNome = new Arvore<>();
+        for (int i = 0; i < pessoas.size(); i++) {
+            arvoreNome.inserirEBalancearAVL(pessoas.get(i).getNome(), i);
+        }
+
+        Arvore<String> arvoreCpf = new Arvore<>();
+        for (int i = 0; i < pessoas.size(); i++) {
+            arvoreCpf.inserirEBalancearAVL(pessoas.get(i).getCpf(), i);
+        }
+
+        System.out.println("\nPessoas Por data de nascimento:\n");
+        Menu.procuraEImprimePessoasPorData(pessoas, arvoreNascimento,inicio, fim );
+        System.out.println("\nAqui acabou a lista por data\n");
+
+        System.out.println("\nPessoas Por nome:\n");
+        Menu.procuraEImprimePessoasPorNome(pessoas, arvoreNome,"João");
+        System.out.println("\nAqui acabou a lista de nome\n");
+
+        System.out.println("\nPessoa com tal CPF:\n");
+        Menu.procuraEImprimePessoaPorCPF(pessoas, arvoreCpf, "65521843342");
+        System.out.println("\nAqui achou a tal pessoa\n");
+
     }
 }
