@@ -34,7 +34,7 @@ class ArvorePessoaTest {
         for (int i = 0; i < pessoas.size(); i++) {
             arvoreCpf.inserirEBalancearAVL(pessoas.get(i).getCpf(), i);
         }
-        PessoaDTO pessoaId = arvoreCpf.procuraPorCpf("65521843342", 1,false);
+        PessoaDTO pessoaId = arvoreCpf.procuraPorCpf("65521843342", 1);
         System.out.println(pessoas.get(pessoaId.getId()));
         System.out.println("para");
     }

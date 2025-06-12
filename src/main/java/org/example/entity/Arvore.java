@@ -194,7 +194,7 @@ public class Arvore<T extends Comparable> {
         }
     }
 
-    public PessoaDTO procuraPorCpf(T cpf, int contador, boolean isContadorUp) {
+    public PessoaDTO procuraPorCpf(T cpf, int contador) {
         No<T> no = procura(cpf, contador);
         if (Objects.isNull(no)){
             throw new PessoaNaoEncontradaException("CPF não consta na base");

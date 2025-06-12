@@ -34,7 +34,7 @@ public class MenuUtils {
 
     public static void procuraEImprimePessoaPorCPF(List<Pessoa> pessoas, Arvore<String> arvore, String cpf) {
 
-        PessoaDTO pessoa = arvore.procuraPorCpf(cpf, 1, true);
+        PessoaDTO pessoa = arvore.procuraPorCpf(cpf, 1);
         Pessoa p = pessoas.get(pessoa.getId());
         p.setIteracoes(pessoa.getIteracoes());
         System.out.println(p);

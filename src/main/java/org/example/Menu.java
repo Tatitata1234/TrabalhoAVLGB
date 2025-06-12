@@ -1,16 +1,13 @@
 package org.example;
 
 import org.example.entity.Arvore;
-import org.example.entity.No;
 import org.example.entity.Pessoa;
 import org.example.exception.DataInicioDepoisDataFimException;
 import org.example.util.LeituraDeArquivo;
-import org.example.util.OrdenacaoUtil;
 import org.example.util.Teclado;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -96,9 +93,8 @@ public class Menu {
                     System.err.println("Data inválida: " + e.getMessage());
                 }
             }
-            default -> {
-                System.err.println("Opção inválida");
-            }
+            default -> System.err.println("Opção inválida");
+
         }
     }
 
