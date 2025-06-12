@@ -2,11 +2,10 @@ package org.example.util;
 
 import org.example.entity.Pessoa;
 
-import java.io.*;
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,13 +13,14 @@ public class LeituraDeArquivo {
 
     private static final String DELIMITER = ";";
 
+    private LeituraDeArquivo() {}
+
     public static List<String[]> leDados(String nomeArquivo) {
         String workingDirectory = System.getProperty("user.dir");
         List<String[]> linhas = new ArrayList<>();
         String fullPath = workingDirectory + File.separator + nomeArquivo;
-        try {
-            File arquivo = new File(fullPath);
-            Scanner leitor = new Scanner(arquivo);
+        File arquivo = new File(fullPath);
+        try (Scanner leitor = new Scanner(arquivo)) {
             String linha = leitor.nextLine(); // precisa pular o "cabeçalho"
             while (leitor.hasNextLine()) {
                 linha = leitor.nextLine();
@@ -45,13 +45,9 @@ public class LeituraDeArquivo {
     }
 
     public static List<Pessoa> leDadosECriaPessoas(String nomeArquivo) {
-        List<String[]> linhas = new ArrayList<>();
-        List<Pessoa> pessoas = new ArrayList<>();
 
-        linhas = leDados(nomeArquivo);
+        List<String[]> linhas = leDados(nomeArquivo);
 
-        pessoas = criaPessoas(linhas);
-
-        return pessoas;
+        return criaPessoas(linhas);
     }
 }

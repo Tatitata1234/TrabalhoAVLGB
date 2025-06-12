@@ -16,6 +16,8 @@ public class No<T extends Comparable> {
 
     private No<T> pai;
 
+    private int iteracoes;
+
     public No() {
         this.esquerda = null;
         this.direita = null;
@@ -108,5 +110,13 @@ public class No<T extends Comparable> {
             dir = this.direita.getAltura();
         p = esq - dir;
         return "\nNó: " + this.chave + "\nAltura: " + this.altura + "\nPontos: " + p + "\n";
+    }
+
+    public int getIteracoes() {
+        return iteracoes;
+    }
+
+    public void setIteracoes(int iteracoes) {
+        this.iteracoes = iteracoes;
     }
 }
