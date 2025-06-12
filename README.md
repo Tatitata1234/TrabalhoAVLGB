@@ -65,4 +65,4 @@ sequenceDiagram
 
 ## Conclusão
 #### Os modelos de Estruturas conhecidos como árvores possuem uma grande vantagem organizativa para buscas e consultas de `N` tipos de dados, e alguns modelos de árvores possuem vantagens para diferentes tipos de dados e funções a serem exercidas
-![Obrigado pela atenção](https://tenor.com/view/garfield-dance-jump-gif-11505863656034024388)
+![Obrigado pela atenção](https://media1.tenor.com/m/n60KCNP8O8QAAAAd/garfield-dance.gif)
