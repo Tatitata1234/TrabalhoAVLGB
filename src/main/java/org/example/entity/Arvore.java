@@ -1,37 +1,36 @@
 package org.example.entity;
 
 
+import org.example.entity.dto.PessoaDTO;
+import org.example.exception.PessoaNaoEncontradaException;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Arvore<T extends Comparable> {
     private No<T> raiz = null;
 
-    private List<Integer> pessoaNomeInOrderList = new ArrayList<>();
+    private Map<Integer,Integer> pessoaNomeInOrderList = new HashMap<>();
 
-    private List<Integer> pessoaNascimentoInOrderList = new ArrayList<>();
+    private Map<Integer, Integer> pessoaNascimentoInOrderList = new HashMap();
 
-    public No<T> procura(T el, int contador, boolean isContadorUp) {
-        return procura(this.raiz, el, contador, isContadorUp);
+    public No<T> procura(T el, int contador) {
+        return procura(this.raiz, el, contador);
     }
 
-    private No<T> procura(No<T> no, T el, int contador, boolean isContadorUp) {
+    private No<T> procura(No<T> no, T el, int contador) {
         if (no == null) {
             return null;
         }
         if (Objects.equals(el, no.getChave())) {
-            if (isContadorUp) {
-                System.out.println("Quantidade de vezes que foi iterada para achar a busca: " + contador);
-            }
+            no.setIteracoes(contador);
             return no;
         } else if (el.compareTo(no.getChave()) < 0) {
             contador++;
-            return procura(no.getEsquerda(), el , contador, isContadorUp);
+            return procura(no.getEsquerda(), el, contador);
         } else {
             contador++;
-            return procura(no.getDireita(), el, contador, isContadorUp);
+            return procura(no.getDireita(), el, contador);
         }
     }
 
@@ -51,7 +50,7 @@ public class Arvore<T extends Comparable> {
         No<T> no = raiz;
         No<T> anterior = null;
 
-        if (procura(el,0, false) != null)
+        if (procura(el, 0) != null)
             return null;
 
         No<T> novoNo = new No<>(el, valor);
@@ -195,60 +194,60 @@ public class Arvore<T extends Comparable> {
         }
     }
 
-    public int procuraPorCpf(T cpf, int contador, boolean isContadorUp) {
-        return procura(cpf, contador, isContadorUp).getValor();
+    public PessoaDTO procuraPorCpf(T cpf, int contador, boolean isContadorUp) {
+        No<T> no = procura(cpf, contador);
+        if (Objects.isNull(no)){
+            throw new PessoaNaoEncontradaException("CPF não consta na base");
+        }
+        return new PessoaDTO(no.getValor(), no.getIteracoes()) ;
     }
 
-    public List<Integer> procuraPorNome(String letra, int contador, boolean isContadorUp) {
-        cleanPessoaInOrderList();
-        procuraPorNome((No<String>) raiz, letra, contador, isContadorUp);
-        return pessoaNomeInOrderList;
-    }
-
-    public void cleanPessoaInOrderList() {
-        this.pessoaNomeInOrderList = new ArrayList<>();
-    }
-
-    public List<Integer> procuraPorDataNascimento(LocalDate inicio, LocalDate fim, int contador, boolean isContadorUp) {
+    public Map<Integer, Integer> procuraPorDataNascimento(LocalDate inicio, LocalDate fim, int contador) {
         cleanPessoaNascimentoInOrderList();
-        procuraPorNascimento((No<LocalDate>) raiz, inicio, fim, contador, isContadorUp);
+        procuraPorNascimento((No<LocalDate>) raiz, inicio, fim, contador);
         return pessoaNascimentoInOrderList;
     }
 
     public void cleanPessoaNascimentoInOrderList() {
-        this.pessoaNascimentoInOrderList = new ArrayList<>();
+        this.pessoaNascimentoInOrderList = new HashMap<>();
     }
 
-    private void procuraPorNome(No<String> no, String letra, int contador, boolean isContadorUp) {
+    private void procuraPorNascimento(No<LocalDate> no, LocalDate inicio, LocalDate fim, int contador) {
         if (no == null) {
-            return ;
-        }
-
-        if (no.getChave().startsWith(letra)) {
-            if (isContadorUp) {
-                System.out.println("Quantidade de vezes que foi iterada para achar a busca: " + contador);
-            }
-            pessoaNomeInOrderList.add(no.getValor());
-        }
-        contador++;
-        procuraPorNome(no.getEsquerda(), letra, contador, isContadorUp);
-        procuraPorNome(no.getDireita(), letra, contador, isContadorUp);
-    }
-
-    private void procuraPorNascimento(No<LocalDate> no, LocalDate inicio, LocalDate fim, int contador, boolean isContadorUp) {
-        if (no == null) {
-            return ;
+            return;
         }
 
         if (no.getChave().isAfter(inicio) && no.getChave().isBefore(fim)) {
-            if (isContadorUp) {
-                System.out.println("Quantidade de vezes que foi iterada para achar a busca: " + contador);
-            }
-            pessoaNascimentoInOrderList.add(no.getValor());
+            pessoaNascimentoInOrderList.put(no.getValor(), contador);
         }
         contador++;
-        procuraPorNascimento(no.getEsquerda(), inicio, fim, contador, isContadorUp);
-        procuraPorNascimento(no.getDireita(), inicio, fim, contador, isContadorUp);
+        procuraPorNascimento(no.getEsquerda(), inicio, fim, contador);
+        procuraPorNascimento(no.getDireita(), inicio, fim, contador);
     }
+
+    public Map<Integer, Integer> procuraPorNome(String letra, int contador) {
+        cleanPessoaInOrderList();
+        procuraPorNome((No<String>) raiz, letra, contador);
+        return pessoaNomeInOrderList;
+    }
+
+    public void cleanPessoaInOrderList() {
+        this.pessoaNomeInOrderList = new HashMap<>();
+    }
+
+    private void procuraPorNome(No<String> no, String letra, int contador) {
+        if (no == null) {
+            return;
+        }
+
+        if (no.getChave().startsWith(letra)) {
+            pessoaNomeInOrderList.put(no.getValor(), contador);
+        }
+        contador++;
+
+        procuraPorNome(no.getEsquerda(), letra, contador);
+        procuraPorNome(no.getDireita(), letra, contador);
+    }
+
 
 }
