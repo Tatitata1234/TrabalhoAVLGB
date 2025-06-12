@@ -13,21 +13,25 @@ public class Arvore<T extends Comparable> {
 
     private List<Integer> pessoaNascimentoInOrderList = new ArrayList<>();
 
-    public No<T> procura(T el) {
-        return procura(this.raiz, el);
+    public No<T> procura(T el, int contador, boolean isContadorUp) {
+        return procura(this.raiz, el, contador, isContadorUp);
     }
 
-    private No<T> procura(No<T> no, T el) {
+    private No<T> procura(No<T> no, T el, int contador, boolean isContadorUp) {
         if (no == null) {
             return null;
         }
-
         if (Objects.equals(el, no.getChave())) {
+            if (isContadorUp) {
+                System.out.println("Quantidade de vezes que foi iterada para achar a busca: " + contador);
+            }
             return no;
         } else if (el.compareTo(no.getChave()) < 0) {
-            return procura(no.getEsquerda(), el);
+            contador++;
+            return procura(no.getEsquerda(), el , contador, isContadorUp);
         } else {
-            return procura(no.getDireita(), el);
+            contador++;
+            return procura(no.getDireita(), el, contador, isContadorUp);
         }
     }
 
@@ -47,7 +51,7 @@ public class Arvore<T extends Comparable> {
         No<T> no = raiz;
         No<T> anterior = null;
 
-        if (procura(el) != null)
+        if (procura(el,0, false) != null)
             return null;
 
         No<T> novoNo = new No<>(el, valor);
@@ -191,13 +195,13 @@ public class Arvore<T extends Comparable> {
         }
     }
 
-    public int procuraPorCpf(T cpf) {
-        return procura(cpf).getValor();
+    public int procuraPorCpf(T cpf, int contador, boolean isContadorUp) {
+        return procura(cpf, contador, isContadorUp).getValor();
     }
 
-    public List<Integer> procuraPorNome(String letra) {
+    public List<Integer> procuraPorNome(String letra, int contador, boolean isContadorUp) {
         cleanPessoaInOrderList();
-        procuraPorNome((No<String>) raiz, letra);
+        procuraPorNome((No<String>) raiz, letra, contador, isContadorUp);
         return pessoaNomeInOrderList;
     }
 
@@ -205,9 +209,9 @@ public class Arvore<T extends Comparable> {
         this.pessoaNomeInOrderList = new ArrayList<>();
     }
 
-    public List<Integer> procuraPorDataNascimento(LocalDate inicio, LocalDate fim) {
+    public List<Integer> procuraPorDataNascimento(LocalDate inicio, LocalDate fim, int contador, boolean isContadorUp) {
         cleanPessoaNascimentoInOrderList();
-        procuraPorNascimento((No<LocalDate>) raiz, inicio, fim);
+        procuraPorNascimento((No<LocalDate>) raiz, inicio, fim, contador, isContadorUp);
         return pessoaNascimentoInOrderList;
     }
 
@@ -215,28 +219,36 @@ public class Arvore<T extends Comparable> {
         this.pessoaNascimentoInOrderList = new ArrayList<>();
     }
 
-    private void procuraPorNome(No<String> no, String letra) {
+    private void procuraPorNome(No<String> no, String letra, int contador, boolean isContadorUp) {
         if (no == null) {
             return ;
         }
 
         if (no.getChave().startsWith(letra)) {
+            if (isContadorUp) {
+                System.out.println("Quantidade de vezes que foi iterada para achar a busca: " + contador);
+            }
             pessoaNomeInOrderList.add(no.getValor());
         }
-        procuraPorNome(no.getEsquerda(), letra);
-        procuraPorNome(no.getDireita(), letra);
+        contador++;
+        procuraPorNome(no.getEsquerda(), letra, contador, isContadorUp);
+        procuraPorNome(no.getDireita(), letra, contador, isContadorUp);
     }
 
-    private void procuraPorNascimento(No<LocalDate> no, LocalDate inicio, LocalDate fim) {
+    private void procuraPorNascimento(No<LocalDate> no, LocalDate inicio, LocalDate fim, int contador, boolean isContadorUp) {
         if (no == null) {
             return ;
         }
 
         if (no.getChave().isAfter(inicio) && no.getChave().isBefore(fim)) {
+            if (isContadorUp) {
+                System.out.println("Quantidade de vezes que foi iterada para achar a busca: " + contador);
+            }
             pessoaNascimentoInOrderList.add(no.getValor());
         }
-        procuraPorNascimento(no.getEsquerda(), inicio, fim);
-        procuraPorNascimento(no.getDireita(), inicio, fim);
+        contador++;
+        procuraPorNascimento(no.getEsquerda(), inicio, fim, contador, isContadorUp);
+        procuraPorNascimento(no.getDireita(), inicio, fim, contador, isContadorUp);
     }
 
 }
